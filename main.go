@@ -78,7 +78,7 @@ func insertProduct() {
 		if err != nil {
 			log.Println(err.Error())
 		}
-		log.Println("product", resProduct)
+		log.Println("product", i, resProduct)
 	}
 }
 
@@ -97,7 +97,7 @@ func insertProductDescription() {
 
 	//Get slice of ids from oc_product table
 	productIDslice := make([]int, 0)
-	productIDs, err := db.Query("SELECT product_id FROM oc_product")
+	productIDs, err := db.Query("SELECT product_id FROM oc_product WHERE product_id NOT IN(SELECT product_id FROM oc_product_description")
 	if err != nil {
 		log.Println(err.Error())
 	}
@@ -109,8 +109,8 @@ func insertProductDescription() {
 		}
 		productIDslice = append(productIDslice, id)
 	}
-
-	for i := 0; i < 20000; i++ {
+	l := len(productIDslice)
+	for i := 0; i < l; i++ {
 		productID := (productIDslice[i])
 		languageID := 1
 		name := fcommerce.ProductName()
@@ -134,7 +134,7 @@ func insertProductDescription() {
 		if err != nil {
 			log.Println(err.Error())
 		}
-		log.Println("product description", resProductDescription)
+		log.Println("product description", i, resProductDescription)
 	}
 }
 
@@ -212,7 +212,7 @@ func insertCustomer() {
 		if err != nil {
 			log.Println(err.Error())
 		}
-		log.Println("customer", resCustomer)
+		log.Println("customer", i, resCustomer)
 	}
 }
 
@@ -603,7 +603,7 @@ func insertOrder() {
 		if err != nil {
 			log.Println(err.Error())
 		}
-		log.Println("order", resOrder)
+		log.Println("order", i, resOrder)
 	}
 }
 
@@ -633,7 +633,7 @@ func insertOrderProduct() {
 	}
 	//Get slice of ids from oc_order table
 	orderIDslice := make([]int, 0)
-	orderIDs, err := db.Query("SELECT order_id FROM oc_order")
+	orderIDs, err := db.Query("SELECT order_id FROM oc_order WHERE order_id NOT IN(SELECT order_id FROM oc_order_product)")
 	if err != nil {
 		log.Println(err.Error())
 	}
@@ -651,7 +651,9 @@ func insertOrderProduct() {
 		log.Println(err.Error())
 	}
 
-	for i := 0; i < 100000; i++ {
+	l := len(orderIDslice)
+
+	for i := 0; i < l; i++ {
 
 		orderID := orderIDslice[i]
 
